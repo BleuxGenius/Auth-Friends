@@ -1,59 +1,57 @@
-import React from "react";
-import axios from "axios";
+import React, { useState } from "react";
+import { axiosWithAuth } from "../utilities/Utilities";
 
-class Login extends React.Component {
-    state = {
-        credentials: {
-            username: "",
-            password: ""
+function Login (props){
+
+    const [ credentials, setCredentials] = useState({
+        username: "",
+        password: ""
+    });
+
+
+    const handleChange = e => {
+            setCredentials({
+                ...credentials,
+                [e.target.name]: e.target.value,
+            })
         }
-    };
 
-    handleChange = e => {
-        this.setState({
-            credentials: {
-                ...this.state.credentials,
-                [e.target.name]: e.target.value
-            }
-        });
-    };
-
-    login = e => {
+    const login = e => {
         e.preventDefault();
 
-        axios
-        .post('http://localhost:5000/api/login', this.state.credentials)
+        axiosWithAuth()
+        .post('/login', credentials)
         .then(res => {
             localStorage.setItem('token', res.date.payload) // returns token to local storage.
-            this.props.histor.push('.protected');
+            props.history.push('/friendslist');
 
         })
         .catch(err => console.log(err));
     };
 
-    render() {
+   
         return (
             <div>
           <h1>Sign In</h1>
-        <form onSubmit={this.login}>
+        <form onSubmit={login}>
          Username: <input 
           type='text'
           name='username'
-          value={this.state.credentials.username}
-          onChange={this.handleChange}
+          value={credentials.username}
+          onChange={handleChange}
 
           />
          Password:  <input 
           type='text'
           name='password'
-          value={this.state.credentials.password}
-          onChange={this.handleChange}
+          value={credentials.password}
+          onChange={handleChange}
           />
           <button>Log In</button>
         </form>
       </div>
         )
     }
-}
+
 
 export default Login;
