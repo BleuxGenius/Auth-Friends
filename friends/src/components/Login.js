@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { axiosWithAuth } from "../utilities/Utilities";
+// import { axiosWithAuth } from "../utilities/Utilities";
+import axios from 'axios';
 
 function Login (props){
 
@@ -19,10 +20,10 @@ function Login (props){
     const login = e => {
         e.preventDefault();
 
-        axiosWithAuth()
-        .post('/login', credentials)
+        axios
+        .post('http://localhost:5000/api/login', credentials)
         .then(res => {
-            localStorage.setItem('token', res.date.payload) // returns token to local storage.
+            localStorage.setItem('token', res.data.payload) // returns token to local storage.
             props.history.push('/friendslist');
 
         })
